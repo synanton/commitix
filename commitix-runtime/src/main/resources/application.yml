@@ -1,0 +1,12 @@
+commitix:
+  enabled: true
+  worker-id-prefix: ${HOSTNAME:local}
+
+  dispatcher:
+    interval: 200ms
+    batch-size: 32
+    lease-duration: 30s
+
+  recovery:
+    interval: 1s
+    batch-size: 128

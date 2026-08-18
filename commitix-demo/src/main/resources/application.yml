@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: commitix-demo
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/commitix_demo
+    username: commitix
+    password: commitix
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    locations: classpath:db/migration/commitix,classpath:db/migration/demo
+    baseline-on-migrate: true
+
+commitix:
+  enabled: true
+  worker-id-prefix: demo
+
+  dispatcher:
+    interval: 500ms
+    batch-size: 16
+    lease-duration: 30s
+
+  recovery:
+    interval: 2s
+    batch-size: 64
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    io.synanton.commitix: DEBUG
