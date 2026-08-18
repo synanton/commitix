@@ -1,6 +1,6 @@
 # Commitix - Durable Execution Intent
 
-**Commitix** is a Phase 1 implementation of the *Synanton Durable Execution Intent* white paper.
+**Commitix** is implementation of the *Synanton Durable Execution Intent* white paper.
 It guarantees **at-least-once execution** of declared operations by persisting intents inside
 the application's own database transaction before returning control to the caller.
 
