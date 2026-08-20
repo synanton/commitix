@@ -237,3 +237,7 @@ See `docs/adr/` for the rationale behind key architectural choices:
 
 **Phase 2+ (not in scope):** deduplication UNIQUE constraint, fast-path dispatcher,
 Prometheus metrics, additional storage adapters, Web UI.
+
+## License
+
+Apache 2.0 License – see [LICENSE](https://LICENSE).
