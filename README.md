@@ -17,7 +17,8 @@ commitix/                              parent POM (pom.xml, packaging=pom)
   ├── commitix-bom/                    Published BOM - import in consuming projects
   ├── commitix-core/                   Domain model + port SPIs  (zero infrastructure deps)
   ├── commitix-jdbc/                   JDBC storage adapter + manual transaction adapter
-  ├── commitix-content/                Optional external payload adapter (Content Service client)
+  ├── commitix-content/                Optional external payload adapter (Content Service HTTP client)
+  ├── commitix-content-grpc/           Optional external payload adapter (Content Service gRPC client)
   ├── commitix-reference-postgres/     PostgreSQL Flyway migrations (no Java logic)
   ├── commitix-runtime/                Spring Boot autoconfiguration, dispatcher, recovery
   └── commitix-demo/                   Order-processing demo (Phase 1 acceptance tests)
@@ -32,6 +33,8 @@ commitix-core           ←── no runtime deps beyond SLF4J, JSpecify, Lombok
 commitix-jdbc           ←── commitix-core  (only java.sql, no Spring)
      │
 commitix-content        ←── commitix-core  (only java.net.http, no Spring)
+     │
+commitix-content-grpc   ←── commitix-content  (io.grpc + protobuf, no Spring)
      ▲
      │
 commitix-runtime        ←── commitix-core + commitix-jdbc + Spring Boot
@@ -213,6 +216,11 @@ commitix:
 ## External Payload Storage (Optional)
 
 `commitix-content` externalizes large intent payloads to the [Content Service](https://github.com/synanton/content-service) (Synanton Content Cache 1.26). It is opt-in: without it, every payload stays inline in `payload_value` exactly as in Phase 1.
+
+Two transports, same `ContentStore` port — pick one:
+
+- `commitix-content`: HTTP client over `java.net.http`, zero new runtime dependencies.
+- `commitix-content-grpc`: gRPC client (`content.v1.ContentService` stubs generated from the versioned proto contract), 5s RPC deadlines, digest verification on read.
 
 ```java
 ContentStore contentStore = HttpContentStore.create("http://localhost:8080");
