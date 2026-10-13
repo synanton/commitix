@@ -259,6 +259,8 @@ See `docs/adr/` for the rationale behind key architectural choices:
 | [ADR-002](docs/adr/ADR-002-jdbc-adapter-shape.md) | JDBC adapter shape |
 | [ADR-003](docs/adr/ADR-003-fencing-invariants.md) | Fencing invariants |
 
+Developer book: [synanton.github.io/commitix](https://synanton.github.io/commitix/) (`docs/` built with mdBook on every merge).
+
 ---
 
 ## Phase 1 Acceptance Criteria
