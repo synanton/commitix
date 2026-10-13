@@ -16,6 +16,7 @@
         <module>commitix-bom</module>
         <module>commitix-core</module>
         <module>commitix-jdbc</module>
+        <module>commitix-content</module>
         <module>commitix-reference-postgres</module>
         <module>commitix-runtime</module>
         <module>commitix-demo</module>
@@ -76,6 +77,11 @@
             <dependency>
                 <groupId>io.synanton.commitix</groupId>
                 <artifactId>commitix-jdbc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.synanton.commitix</groupId>
+                <artifactId>commitix-content</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -17,6 +17,7 @@ commitix/                              parent POM (pom.xml, packaging=pom)
   ├── commitix-bom/                    Published BOM - import in consuming projects
   ├── commitix-core/                   Domain model + port SPIs  (zero infrastructure deps)
   ├── commitix-jdbc/                   JDBC storage adapter + manual transaction adapter
+  ├── commitix-content/                Optional external payload adapter (Content Service client)
   ├── commitix-reference-postgres/     PostgreSQL Flyway migrations (no Java logic)
   ├── commitix-runtime/                Spring Boot autoconfiguration, dispatcher, recovery
   └── commitix-demo/                   Order-processing demo (Phase 1 acceptance tests)
@@ -29,6 +30,8 @@ commitix-core           ←── no runtime deps beyond SLF4J, JSpecify, Lombok
      ▲
      │
 commitix-jdbc           ←── commitix-core  (only java.sql, no Spring)
+     │
+commitix-content        ←── commitix-core  (only java.net.http, no Spring)
      ▲
      │
 commitix-runtime        ←── commitix-core + commitix-jdbc + Spring Boot
@@ -204,6 +207,37 @@ commitix:
     interval: 1s                     # recovery sweep interval
     batch-size: 128                  # max intents recovered per tick
 ```
+
+---
+
+## External Payload Storage (Optional)
+
+`commitix-content` externalizes large intent payloads to the [Content Service](https://github.com/synanton/content-service) (Synanton Content Cache 1.26). It is opt-in: without it, every payload stays inline in `payload_value` exactly as in Phase 1.
+
+```java
+ContentStore contentStore = HttpContentStore.create("http://localhost:8080");
+
+ExternalizationPolicy policy = ExternalizationPolicy.disabledByDefault(65536)
+    .disabledTenants(Set.of("regulated-tenant"))
+    .build();
+
+PayloadSerializer serializer = new ExternalizingPayloadSerializer(
+    new JacksonPayloadSerializer(),   // your canonical serializer
+    contentStore,
+    policy,
+    () -> TenantContext.currentTenant(),  // ambient tenant scope
+    null,                             // default intent-type key: payload class name
+    1);                               // serializer version stamp
+
+JdbcStorageAdapter storage = new JdbcStorageAdapter(dataSource, serializer);
+```
+
+How it works:
+
+- `serialize()` produces canonical bytes first, then the policy decides inline vs external (kill switch → tenant veto → intent-type veto → size threshold).
+- External payloads are published via `ContentStore.put()` **before** the intent row is persisted (write-before-reference, not a distributed transaction). A compact reference envelope lands in `payload_value`, so **no schema migration is needed** and all existing `StorageAdapterContractTest` invariants keep holding.
+- `deserialize()` resolves envelopes through `ContentStore.get()` (digest-verified, fail-closed) and passes legacy inline rows straight through.
+- If the transaction rolls back after `put()`, the remote object becomes an orphan reconciled by Content Service after the grace period. If `put()` fails, `declare()` fails with no committed intent.
 
 ---
 
