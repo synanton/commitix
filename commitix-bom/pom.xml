@@ -30,6 +30,11 @@
             </dependency>
             <dependency>
                 <groupId>io.synanton.commitix</groupId>
+                <artifactId>commitix-content</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.synanton.commitix</groupId>
                 <artifactId>commitix-reference-postgres</artifactId>
                 <version>${project.version}</version>
             </dependency>
