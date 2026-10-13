@@ -1,0 +1,19 @@
+[book]
+title = "Commitix Developer Documentation"
+authors = ["Andrei Minin"]
+description = "Durable execution intents for the JVM - white paper, implementation plan and architecture decisions for Commitix"
+language = "en"
+src = "."
+
+[build]
+build-dir = "book"
+
+[output.html]
+site-url = "/commitix/"
+git-repository-url = "https://github.com/synanton/commitix"
+edit-url-template = "https://github.com/synanton/commitix/edit/main/docs/{path}"
+default-theme = "light"
+preferred-dark-theme = "navy"
+
+[output.html.fold]
+enable = true

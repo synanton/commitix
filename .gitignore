@@ -9,6 +9,9 @@
 # Log file
 *.log
 
+# mdBook output (built by .github/workflows/docs.yml)
+docs/book/
+
 # BlueJ files
 *.ctxt
 
