@@ -249,6 +249,16 @@ How it works:
 
 ---
 
+## Documentation
+
+Developer documentation is published as a book at [synanton.github.io/commitix](https://synanton.github.io/commitix/), built from `docs/` with mdBook on every merge:
+
+- **Design** — white paper v1.0 and the Synanton Business Logic Library proposal
+- **Implementation** — Phase 1 implementation plan
+- **Decisions** — architecture decision records (see below)
+
+---
+
 ## Design Decisions
 
 See `docs/adr/` for the rationale behind key architectural choices:
@@ -258,8 +268,6 @@ See `docs/adr/` for the rationale behind key architectural choices:
 | [ADR-001](docs/adr/ADR-001-maven-over-gradle.md) | Maven over Gradle |
 | [ADR-002](docs/adr/ADR-002-jdbc-adapter-shape.md) | JDBC adapter shape |
 | [ADR-003](docs/adr/ADR-003-fencing-invariants.md) | Fencing invariants |
-
-Developer book: [synanton.github.io/commitix](https://synanton.github.io/commitix/) (`docs/` built with mdBook on every merge).
 
 ---
 
